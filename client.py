@@ -37,10 +37,14 @@ if __name__ == "__main__":
         
         # ... quit code
         if text.lower() == '/quit':
+            try:
+                client.sendall(text.encode())  # Send /quit to server
+                time.sleep(0.1)  # Give time for send
+            except:
+                pass
             print("Goodbye!")
-            client.close()  # Close socket immediately
-            time.sleep(0.1)  # Give time for threads to finish
-            sys.exit(0)  # Force exit
+            client.close()
+            sys.exit(0)
         try:
             client.sendall(text.encode())
         except:
