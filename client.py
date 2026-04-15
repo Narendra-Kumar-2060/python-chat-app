@@ -7,6 +7,8 @@ import time
 HOST = "127.0.0.1"
 PORT = 8080
 
+# Create a lock object to protect printing
+print_lock = threading.Lock()
 
 # handle recieved messages
 def receive_messages(client):
@@ -14,10 +16,25 @@ def receive_messages(client):
         try:
             msg = client.recv(1024).decode()
             if msg:  # Only print if there's a message
-                print(msg)
+                # Use try/finally to safely print
+                print_lock.acquire()
+                try:
+                    # Clear current line
+                    sys.stdout.write('\r' + ' ' * 80 + '\r')
+                    # Print the message
+                    print(msg)
+                    # Restore the prompt
+                    sys.stdout.write("> ")
+                    sys.stdout.flush()
+                finally:
+                    print_lock.release()
         except:
-            print("Disconnected from server")
-            break
+            print_lock.acquire()
+            try:
+                print("\nDisconnected from server")
+            finally:
+                print_lock.release()
+                break
 
 
 if __name__ == "__main__":
@@ -29,7 +46,7 @@ if __name__ == "__main__":
     threading.Thread(target=receive_messages, args=(client,), daemon=True).start()
     # sending message to server
     while True:
-        text = input()
+        text = input("> ")  # Shows "> " so user knows where to type
     
         # Skip empty messages (just pressing Enter)
         if not text or text.strip() == '':
