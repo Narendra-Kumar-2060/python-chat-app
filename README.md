@@ -1,3 +1,4 @@
+```markdown
 # Chat App
 
 A multi-client chat server built with Python sockets.
@@ -31,3 +32,5 @@ Requirements
 Author
 
 Narendra Kumar
+
+```
