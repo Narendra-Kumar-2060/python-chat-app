@@ -15,19 +15,18 @@ A multi-client chat server built with Python sockets.
    ```bash
    python server.py
    ```
-
-1. Start clients (in separate terminals):
+2. Start clients (in separate terminals):
    ```bash
    python client.py
    ```
 2. Enter username when prompted
 3. Type messages. Use /quit to exit.
 
-Requirements
+## Requirements
 
 · Python 3.x
 · No external libraries needed
 
-Author
+## Author
 
 Narendra Kumar
