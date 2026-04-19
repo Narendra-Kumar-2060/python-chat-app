@@ -1,4 +1,3 @@
-```markdown
 # Chat App
 
 A multi-client chat server built with Python sockets.
@@ -15,7 +14,7 @@ A multi-client chat server built with Python sockets.
 1. Start the server:
    ```bash
    python server.py
-```
+   ```
 
 1. Start clients (in separate terminals):
    ```bash
@@ -32,5 +31,3 @@ Requirements
 Author
 
 Narendra Kumar
-
-```
