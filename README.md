@@ -1,3 +1,4 @@
+```markdown
 # Chat App
 
 A multi-client chat server built with Python sockets.
@@ -12,20 +13,24 @@ A multi-client chat server built with Python sockets.
 ## How to Run
 
 1. Start the server:
+   ```bash
+   python server.py
+```
 
-python server.py
+1. Start clients (in separate terminals):
+   ```bash
+   python client.py
+   ```
+2. Enter username when prompted
+3. Type messages. Use /quit to exit.
 
-2. Start clients (in separate terminals):
+Requirements
 
-python client.py
+· Python 3.x
+· No external libraries needed
 
-3. Enter username when prompted
+Author
 
-4. Type messages. Use `/quit` to exit.
-
-## Requirements
-- Python 3.x
-- No external libraries needed
-
-## Author
 Narendra Kumar
+
+```
