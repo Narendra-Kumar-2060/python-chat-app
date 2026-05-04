@@ -6,7 +6,7 @@ HOST = ""
 PORT = 8080
 
 client_usernames = {}
-clients_lock = threading.Lock()  
+clients_lock = threading.Lock()
 
 
 def get_timestamp():
