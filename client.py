@@ -3,27 +3,25 @@ import threading
 import sys
 import time
 
-# constants
 HOST = "127.0.0.1"
 PORT = 8080
 
-# Create a lock object to protect printing
 print_lock = threading.Lock()
 
-# handle recieved messages
+
 def receive_messages(client):
     while True:
         try:
             msg = client.recv(1024).decode()
-            if msg:  # Only print if there's a message
-                # Use try/finally to safely print
+            if msg:
+
                 print_lock.acquire()
                 try:
-                    # Clear current line
-                    sys.stdout.write('\r' + ' ' * 80 + '\r')
-                    # Print the message
+
+                    sys.stdout.write("\r" + " " * 80 + "\r")
+
                     print(msg)
-                    # Restore the prompt
+
                     sys.stdout.write("> ")
                     sys.stdout.flush()
                 finally:
@@ -39,24 +37,33 @@ def receive_messages(client):
 
 if __name__ == "__main__":
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((HOST, PORT))
+    connected = False
+    for attempt in range(5):
+        try:
+            client.connect((HOST, PORT))
+            connected = True
+            break
+        except:
+            print(f"Connecting... (attempt {attempt+1}/5)")
+            time.sleep(2)
+
+    if not connected:
+        print("Cannot connect to server")
+        sys.exit(1)
+
     username = input("Enter your name: ")
     client.sendall(username.encode())
-    # Start receiving messages in background
     threading.Thread(target=receive_messages, args=(client,), daemon=True).start()
-    # sending message to server
     while True:
-        text = input("> ")  # Shows "> " so user knows where to type
-    
-        # Skip empty messages (just pressing Enter)
-        if not text or text.strip() == '':
-            continue  # Go back to the start of the loop
-        
-        # ... quit code
-        if text.lower() == '/quit':
+        text = input("> ")
+
+        if not text or text.strip() == "":
+            continue
+
+        if text.lower() == "/quit":
             try:
-                client.sendall(text.encode())  # Send /quit to server
-                time.sleep(0.1)  # Give time for send
+                client.sendall(text.encode())
+                time.sleep(0.1)
             except:
                 pass
             print("Goodbye!")
