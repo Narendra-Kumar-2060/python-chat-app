@@ -29,7 +29,7 @@ A real-time multi-user chat application built with Python sockets. Supports publ
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/chat-app.git
+git clone https://github.com/Narendra-Kumar-2060/python-chat-app.git
 cd chat-app
 
 # Run the server
