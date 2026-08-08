@@ -95,15 +95,17 @@ def handle_commands(message, sender):
 
 
 def handle_client(active_client):
+    username = None
     try:
-        username = active_client.recv(1024).decode()
+        username = active_client.recv(1024).decode().strip()
         with clients_lock:
-            if username in client_usernames.values():
+            if not username or username in client_usernames.values():
                 active_client.sendall("Username taken! Disconnecting.".encode())
                 active_client.close()
                 return
-
-        with clients_lock:
+            # Registered inside the same locked block as the check above,
+            # so two clients connecting at the same instant can't both
+            # claim the same name in the gap between check and set.
             client_usernames[active_client] = username
         print(f"{username} connected")
         broadcast_message(f"{username} joined!!!", active_client)
@@ -125,12 +127,15 @@ def handle_client(active_client):
         pass
 
     finally:
+        was_registered = False
         with clients_lock:
             if active_client in client_usernames:
                 username = client_usernames[active_client]
                 del client_usernames[active_client]
-        print(f"{username} disconnected")
-        broadcast_message(f"{username} left the chat", active_client)
+                was_registered = True
+        if was_registered:
+            print(f"{username} disconnected")
+            broadcast_message(f"{username} left the chat", active_client)
         active_client.close()
 
 
