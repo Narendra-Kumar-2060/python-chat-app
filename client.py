@@ -1,6 +1,6 @@
 import socket
-import threading
 import sys
+import threading
 import time
 
 HOST = "127.0.0.1"
@@ -14,10 +14,8 @@ def receive_messages(client):
         try:
             msg = client.recv(1024).decode()
             if msg:
-
                 print_lock.acquire()
                 try:
-
                     sys.stdout.write("\r" + " " * 80 + "\r")
 
                     print(msg)
@@ -26,7 +24,7 @@ def receive_messages(client):
                     sys.stdout.flush()
                 finally:
                     print_lock.release()
-        except:
+        except Exception:
             print_lock.acquire()
             try:
                 print("\nDisconnected from server")
@@ -43,8 +41,8 @@ if __name__ == "__main__":
             client.connect((HOST, PORT))
             connected = True
             break
-        except:
-            print(f"Connecting... (attempt {attempt+1}/5)")
+        except Exception:
+            print(f"Connecting... (attempt {attempt + 1}/5)")
             time.sleep(2)
 
     if not connected:
@@ -64,12 +62,12 @@ if __name__ == "__main__":
             try:
                 client.sendall(text.encode())
                 time.sleep(0.1)
-            except:
+            except Exception:
                 pass
             print("Goodbye!")
             client.close()
             sys.exit(0)
         try:
             client.sendall(text.encode())
-        except:
+        except Exception:
             break

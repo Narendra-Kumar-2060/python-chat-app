@@ -47,7 +47,7 @@ python client.py
 
 ## Example
 
-```
+```text
 > Hello everyone!
 [2026-04-29 14:30:15] Alice: Hello everyone!
 

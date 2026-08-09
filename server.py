@@ -23,7 +23,7 @@ def broadcast_message(message, sender_socket):
             try:
                 full_message = f"[{get_timestamp()}] {message}"
                 client_socket.sendall(full_message.encode())
-            except:
+            except Exception:
                 disconnected_clients.append(client_socket)
 
     for client in disconnected_clients:
@@ -34,7 +34,6 @@ def broadcast_message(message, sender_socket):
 
 def handle_commands(message, sender):
     if message.startswith("/"):
-
         message_list = message.split(" ")
         if message.lower() == "/users":
             with clients_lock:
@@ -57,7 +56,7 @@ def handle_commands(message, sender):
 
         elif message.lower().startswith("/msg"):
             if len(message_list) < 3:
-                sender.sendall("Usage: /msg <username> <message>".encode())
+                sender.sendall(b"Usage: /msg <username> <message>")
                 return
             target_name = message_list[1]
             private_message = " ".join(message_list[2:])
@@ -79,7 +78,7 @@ def handle_commands(message, sender):
                     sender.sendall(
                         f"[{get_timestamp()}] [Private to {target_name}]: {private_message}".encode()
                     )
-                except:
+                except Exception:
                     sender.sendall(
                         f"[{get_timestamp()}] Error: Could not send message to {target_name}".encode()
                     )
@@ -100,7 +99,7 @@ def handle_client(active_client):
         username = active_client.recv(1024).decode().strip()
         with clients_lock:
             if not username or username in client_usernames.values():
-                active_client.sendall("Username taken! Disconnecting.".encode())
+                active_client.sendall(b"Username taken! Disconnecting.")
                 active_client.close()
                 return
             # Registered inside the same locked block as the check above,
@@ -123,7 +122,7 @@ def handle_client(active_client):
             if not is_command:
                 broadcast_message(f"{username}: {message}", active_client)
 
-    except:
+    except Exception:
         pass
 
     finally:
