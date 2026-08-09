@@ -17,19 +17,19 @@ def get_timestamp():
 
 def broadcast_message(message, sender_socket):
     disconnected_clients = []
-    clients_copy = list(client_usernames.keys())
-    for client_socket in clients_copy:
-        if client_socket != sender_socket:
-            try:
-                full_message = f"[{get_timestamp()}] {message}"
-                client_socket.sendall(full_message.encode())
-            except Exception:
-                disconnected_clients.append(client_socket)
+    with clients_lock:
+        for client_socket in list(client_usernames.keys()):
+            if client_socket != sender_socket:
+                try:
+                    full_message = f"[{get_timestamp()}] {message}"
+                    client_socket.sendall(full_message.encode())
+                except Exception:
+                    disconnected_clients.append(client_socket)
 
-    for client in disconnected_clients:
-        if client in client_usernames:
-            del client_usernames[client]
-            client.close()
+        for client in disconnected_clients:
+            if client in client_usernames:
+                del client_usernames[client]
+                client.close()
 
 
 def handle_commands(message, sender):
